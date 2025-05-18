@@ -11,6 +11,7 @@ export interface Product {
   };
   stock: number;
   featured?: boolean;
+  rating?: number; // Adding the optional rating property
 }
 
 export const products: Product[] = [
