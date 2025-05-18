@@ -2,7 +2,7 @@
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { PhoneCall, Clock, Calendar, Tool } from 'lucide-react';
+import { PhoneCall, Clock, Calendar, Wrench, Settings, Server, HardDrive, Network } from 'lucide-react';
 
 interface ServiceProps {
   title: string;
@@ -41,31 +41,31 @@ const Services = () => {
       title: "Computer Repair",
       description: "Complete diagnostic and repair for desktop computers and laptops of all brands",
       price: "$49.99",
-      icon: <Tool className="h-6 w-6 text-blue-600" />
+      icon: <Wrench className="h-6 w-6 text-blue-600" />
     },
     {
       title: "Virus Removal",
       description: "Complete virus, malware, adware removal and system optimization",
       price: "$39.99",
-      icon: <Tool className="h-6 w-6 text-blue-600" />
+      icon: <Settings className="h-6 w-6 text-blue-600" />
     },
     {
       title: "Data Recovery",
       description: "Professional data recovery from damaged or corrupted storage devices",
       price: "$79.99",
-      icon: <Tool className="h-6 w-6 text-blue-600" />
+      icon: <HardDrive className="h-6 w-6 text-blue-600" />
     },
     {
       title: "System Upgrade",
       description: "Hardware and software upgrades to improve your system performance",
       price: "$59.99",
-      icon: <Tool className="h-6 w-6 text-blue-600" />
+      icon: <Server className="h-6 w-6 text-blue-600" />
     },
     {
       title: "Network Setup",
       description: "Home or office network installation and troubleshooting",
       price: "$69.99",
-      icon: <Tool className="h-6 w-6 text-blue-600" />
+      icon: <Network className="h-6 w-6 text-blue-600" />
     },
     {
       title: "IT Consultation",
