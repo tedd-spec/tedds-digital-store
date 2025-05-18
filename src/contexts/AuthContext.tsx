@@ -6,6 +6,7 @@ interface User {
   id: string;
   name: string;
   email: string;
+  displayName?: string; // Added displayName property as optional
 }
 
 interface AuthContextType {
@@ -39,7 +40,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // This is a mock implementation
       // In a real app, you would call your authentication API
       await new Promise(resolve => setTimeout(resolve, 1000));
-      const mockUser: User = { id: '1', name: 'Test User', email };
+      const mockUser: User = { 
+        id: '1', 
+        name: 'Test User', 
+        email,
+        displayName: 'Test User' // Added displayName here with the same value as name
+      };
       setUser(mockUser);
       localStorage.setItem('user', JSON.stringify(mockUser));
       toast.success("Successfully logged in");
@@ -56,7 +62,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       // This is a mock implementation
       await new Promise(resolve => setTimeout(resolve, 1000));
-      const mockUser: User = { id: '1', name, email };
+      const mockUser: User = { 
+        id: '1', 
+        name, 
+        email,
+        displayName: name // Added displayName here with the same value as name
+      };
       setUser(mockUser);
       localStorage.setItem('user', JSON.stringify(mockUser));
       toast.success("Account created successfully");
