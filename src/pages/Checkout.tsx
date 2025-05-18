@@ -9,19 +9,22 @@ import { useCart } from '@/contexts/CartContext';
 import { toast } from 'sonner';
 import { Textarea } from '@/components/ui/textarea';
 import { Check } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Checkout = () => {
   const { items, total, clearCart } = useCart();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
-    name: '',
+    name: user?.displayName || '',
     phone: '',
-    email: '',
+    email: user?.email || '',
     address: '',
     city: '',
     zipCode: '',
     notes: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   if (items.length === 0) {
     navigate('/cart');
@@ -33,12 +36,55 @@ const Checkout = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const simulateSendEmail = async (email: string, orderDetails: any) => {
+    console.log(`Simulating email sent to ${email} with order details:`, orderDetails);
+    // In a real app, this would call a backend API to send an actual email
+    return new Promise(resolve => setTimeout(resolve, 1000));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would send the order to a backend
-    toast.success("Order placed successfully! We'll contact you soon.");
-    clearCart();
-    navigate('/');
+    setIsSubmitting(true);
+    
+    try {
+      // Simulate API call to place order
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Prepare order details for email
+      const orderDetails = {
+        orderNumber: `ORD-${Date.now().toString().slice(-6)}`,
+        items,
+        total,
+        shippingAddress: {
+          name: formData.name,
+          address: formData.address,
+          city: formData.city,
+          zipCode: formData.zipCode
+        },
+        date: new Date().toLocaleDateString()
+      };
+      
+      // Simulate sending email notification
+      await simulateSendEmail(formData.email, orderDetails);
+      
+      // Clear cart and show success message
+      clearCart();
+      
+      toast.success(
+        "Order placed successfully! A confirmation email has been sent.",
+        {
+          duration: 5000,
+        }
+      );
+      
+      // Redirect to homepage after successful order
+      navigate('/');
+    } catch (error) {
+      toast.error("There was an error processing your order. Please try again.");
+      console.error("Order error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -154,8 +200,8 @@ const Checkout = () => {
                   </p>
                 </div>
                 
-                <Button type="submit" className="w-full mt-6">
-                  Place Order
+                <Button type="submit" className="w-full mt-6" disabled={isSubmitting}>
+                  {isSubmitting ? "Processing..." : "Place Order"}
                 </Button>
               </form>
             </div>
