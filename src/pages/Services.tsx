@@ -1,8 +1,11 @@
 
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { PhoneCall, Clock, Calendar, Wrench, Settings, Server, HardDrive, Network } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ServiceProps {
   title: string;
@@ -12,10 +15,26 @@ interface ServiceProps {
 }
 
 const ServiceCard = ({ title, description, price, icon }: ServiceProps) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleBookService = () => {
+    if (!user) {
+      toast.error("Please login to book a service");
+      navigate('/login');
+      return;
+    }
+
+    // In production, this would use the actual WhatsApp number
+    const message = `Hello, I would like to book the ${title} service priced at ${price}.`;
+    const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
-    <Card className="h-full flex flex-col hover:shadow-lg transition-shadow">
+    <Card className="h-full flex flex-col hover:shadow-lg transition-shadow bg-gray-50">
       <CardHeader>
-        <div className="w-12 h-12 mb-4 rounded-full bg-blue-100 flex items-center justify-center">
+        <div className="w-12 h-12 mb-4 rounded-full bg-gray-200 flex items-center justify-center">
           {icon}
         </div>
         <CardTitle>{title}</CardTitle>
@@ -27,8 +46,12 @@ const ServiceCard = ({ title, description, price, icon }: ServiceProps) => {
         </p>
       </CardContent>
       <CardFooter>
-        <Button variant="default" className="w-full">
-          Book Now
+        <Button 
+          variant="default" 
+          className="w-full bg-green-600 hover:bg-green-700"
+          onClick={handleBookService}
+        >
+          Book via WhatsApp
         </Button>
       </CardFooter>
     </Card>
@@ -41,57 +64,57 @@ const Services = () => {
       title: "Computer Repair",
       description: "Complete diagnostic and repair for desktop computers and laptops of all brands",
       price: "$49.99",
-      icon: <Wrench className="h-6 w-6 text-blue-600" />
+      icon: <Wrench className="h-6 w-6 text-gray-600" />
     },
     {
       title: "Virus Removal",
       description: "Complete virus, malware, adware removal and system optimization",
       price: "$39.99",
-      icon: <Settings className="h-6 w-6 text-blue-600" />
+      icon: <Settings className="h-6 w-6 text-gray-600" />
     },
     {
       title: "Data Recovery",
       description: "Professional data recovery from damaged or corrupted storage devices",
       price: "$79.99",
-      icon: <HardDrive className="h-6 w-6 text-blue-600" />
+      icon: <HardDrive className="h-6 w-6 text-gray-600" />
     },
     {
       title: "System Upgrade",
       description: "Hardware and software upgrades to improve your system performance",
       price: "$59.99",
-      icon: <Server className="h-6 w-6 text-blue-600" />
+      icon: <Server className="h-6 w-6 text-gray-600" />
     },
     {
       title: "Network Setup",
       description: "Home or office network installation and troubleshooting",
       price: "$69.99",
-      icon: <Network className="h-6 w-6 text-blue-600" />
+      icon: <Network className="h-6 w-6 text-gray-600" />
     },
     {
       title: "IT Consultation",
       description: "Professional IT advice and planning for businesses and individuals",
       price: "$89.99/hr",
-      icon: <Clock className="h-6 w-6 text-blue-600" />
+      icon: <Clock className="h-6 w-6 text-gray-600" />
     },
     {
       title: "Cloud Services",
       description: "Setup and management of cloud storage and backup solutions",
       price: "$49.99",
-      icon: <Calendar className="h-6 w-6 text-blue-600" />
+      icon: <Calendar className="h-6 w-6 text-gray-600" />
     },
     {
       title: "Remote Support",
       description: "Remote technical assistance and troubleshooting",
       price: "$29.99/hr",
-      icon: <PhoneCall className="h-6 w-6 text-blue-600" />
+      icon: <PhoneCall className="h-6 w-6 text-gray-600" />
     },
   ];
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-12 bg-gray-100">
         <div className="mb-12">
-          <h1 className="text-3xl font-bold text-center mb-4">IT Services</h1>
+          <h1 className="text-3xl font-bold text-center mb-4 text-gray-800">IT Services</h1>
           <p className="text-center text-gray-600 max-w-3xl mx-auto">
             Our experienced technicians provide comprehensive computer repair services 
             and IT solutions for both individuals and businesses.
@@ -110,17 +133,17 @@ const Services = () => {
           ))}
         </div>
 
-        <div className="mt-16 bg-brand rounded-lg p-8 text-white">
+        <div className="mt-16 bg-gray-200 rounded-lg p-8 text-gray-800">
           <h2 className="text-2xl font-bold mb-4">Need Custom IT Solutions?</h2>
           <p className="mb-6">
             We offer tailored IT services for businesses of all sizes. 
             Contact us to discuss your specific needs and get a customized quote.
           </p>
           <div className="flex flex-wrap gap-4">
-            <Button variant="outline" className="bg-white text-brand hover:bg-gray-100">
+            <Button variant="outline" className="bg-white text-gray-700 hover:bg-gray-100 border-gray-300">
               Contact Us
             </Button>
-            <Button variant="secondary">
+            <Button variant="secondary" className="bg-gray-600 text-white hover:bg-gray-700">
               Schedule Consultation
             </Button>
           </div>
