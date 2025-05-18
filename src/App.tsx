@@ -16,6 +16,7 @@ import Cart from "./pages/Cart";
 import Auth from "./pages/Auth";
 import Account from "./pages/Account";
 import NotFound from "./pages/NotFound";
+import Services from "./pages/Services";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="/login" element={<Auth />} />
               <Route path="/register" element={<Auth />} />
               <Route path="/account" element={<Account />} />
+              <Route path="/services" element={<Services />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

@@ -3,9 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 210 20% 98%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -74,9 +76,14 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
   }
   
   .hero-gradient {
     background: linear-gradient(90deg, rgba(42,62,86,0.9) 0%, rgba(59,130,246,0.8) 100%);
   }
+}
+
+.hot-deal-badge {
+  @apply absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full;
 }

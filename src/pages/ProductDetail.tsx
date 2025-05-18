@@ -7,6 +7,7 @@ import { ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
 import { Product, getProductById } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -15,6 +16,7 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const { addItem } = useCart();
+  const { user } = useAuth();
 
   useEffect(() => {
     if (id) {
@@ -34,7 +36,7 @@ const ProductDetail = () => {
   }, [id, navigate]);
 
   const handleAddToCart = () => {
-    if (product) {
+    if (product && user) {
       addItem({
         id: product.id,
         name: product.name,
@@ -42,6 +44,21 @@ const ProductDetail = () => {
         image: product.image,
         quantity
       });
+    } else if (!user) {
+      toast.error("Please login to add items to cart");
+      navigate('/login');
+    }
+  };
+
+  const handleOrderViaWhatsApp = () => {
+    if (product && user) {
+      const message = `Hello, I'm interested in purchasing the ${product.name} (ID: ${product.id}) for $${product.price.toFixed(2)}. Quantity: ${quantity}`;
+      // In production, this would use the actual WhatsApp number
+      const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    } else if (!user) {
+      toast.error("Please login to place an order");
+      navigate('/login');
     }
   };
 
@@ -137,16 +154,44 @@ const ProductDetail = () => {
               </div>
             )}
             
-            {/* Add to Cart Button */}
-            <Button
-              onClick={handleAddToCart}
-              disabled={product.stock === 0}
-              className="w-full mb-6 flex items-center justify-center"
-              size="lg"
-            >
-              <ShoppingCart className="mr-2 h-5 w-5" />
-              Add to Cart
-            </Button>
+            {/* Payment Options */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+              <h3 className="font-semibold mb-2">Payment Options</h3>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="cod"
+                  name="payment"
+                  value="cod"
+                  checked
+                  readOnly
+                  className="mr-2"
+                />
+                <label htmlFor="cod" className="text-sm">Cash On Delivery</label>
+              </div>
+            </div>
+            
+            {/* Action Buttons */}
+            <div className="flex flex-col md:flex-row gap-4 mb-6">
+              <Button
+                onClick={handleAddToCart}
+                disabled={!user || product.stock === 0}
+                className="flex-1 flex items-center justify-center"
+                size="lg"
+              >
+                <ShoppingCart className="mr-2 h-5 w-5" />
+                Add to Cart
+              </Button>
+              <Button
+                onClick={handleOrderViaWhatsApp}
+                disabled={!user || product.stock === 0}
+                variant="outline"
+                className="flex-1 border-green-500 text-green-600 hover:bg-green-50"
+                size="lg"
+              >
+                Order via WhatsApp
+              </Button>
+            </div>
             
             {/* Product Specifications */}
             {product.specs && (

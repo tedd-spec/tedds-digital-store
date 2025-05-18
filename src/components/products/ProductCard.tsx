@@ -11,14 +11,17 @@ import {
 } from "@/components/ui/card";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Product } from "@/data/products";
 
 interface ProductCardProps {
   product: Product;
+  isHotDeal?: boolean;
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, isHotDeal = false }: ProductCardProps) => {
   const { addItem } = useCart();
+  const { user } = useAuth();
   
   const handleAddToCart = () => {
     addItem({
@@ -31,7 +34,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
   };
 
   return (
-    <Card className="overflow-hidden h-full flex flex-col transition-all hover:shadow-lg">
+    <Card className="overflow-hidden h-full flex flex-col transition-all hover:shadow-lg relative">
+      {isHotDeal && (
+        <span className="hot-deal-badge">Hot Deal!</span>
+      )}
       <Link to={`/product/${product.id}`} className="overflow-hidden">
         <div className="h-48 overflow-hidden">
           <img 
@@ -65,17 +71,27 @@ const ProductCard = ({ product }: ProductCardProps) => {
           )}
         </div>
       </CardContent>
-      <CardFooter className="flex items-center justify-between pt-0">
-        <div className="text-xl font-bold text-brand">${product.price.toFixed(2)}</div>
-        <Button 
-          onClick={handleAddToCart}
-          variant="default"
-          size="sm"
-          className="flex items-center gap-1"
-        >
-          <ShoppingCart className="h-4 w-4 mr-1" />
-          Add to Cart
-        </Button>
+      <CardFooter className="flex flex-col gap-2 pt-0">
+        <div className="text-xl font-bold text-brand w-full">${product.price.toFixed(2)}</div>
+        <div className="flex gap-2 w-full">
+          <Button 
+            onClick={handleAddToCart}
+            variant="default"
+            size="sm"
+            className="flex items-center gap-1 flex-1"
+            disabled={!user}
+          >
+            <ShoppingCart className="h-4 w-4 mr-1" />
+            Add to Cart
+          </Button>
+          <Button 
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-1 flex-1 border-green-500 text-green-600 hover:bg-green-50"
+          >
+            Order via WhatsApp
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );

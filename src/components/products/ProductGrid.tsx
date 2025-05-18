@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Product } from '@/data/products';
 import ProductCard from './ProductCard';
@@ -10,9 +11,10 @@ interface ProductGridProps {
   products: Product[];
   title?: string;
   showFilters?: boolean;
+  hotDeals?: boolean;
 }
 
-const ProductGrid = ({ products, title, showFilters = false }: ProductGridProps) => {
+const ProductGrid = ({ products, title, showFilters = false, hotDeals = false }: ProductGridProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState('default');
   const [displayedProducts, setDisplayedProducts] = useState(products);
@@ -118,7 +120,7 @@ const ProductGrid = ({ products, title, showFilters = false }: ProductGridProps)
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {displayedProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} isHotDeal={hotDeals} />
           ))}
         </div>
       )}
